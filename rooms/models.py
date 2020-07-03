@@ -72,7 +72,7 @@ class Room(core_models.AbstractTimeStamped):
 
     name = models.CharField(max_length=140, default="")
     description = models.TextField(null=False)
-    country = CountryField(default="")
+    country = CountryField()
     city = models.CharField(max_length=80, default="")
     price = models.IntegerField(default=0)
     address = models.CharField(max_length=140, default="")
@@ -80,8 +80,8 @@ class Room(core_models.AbstractTimeStamped):
     beds = models.IntegerField(default=0)
     bedrooms = models.IntegerField(default=0)
     baths = models.IntegerField(default=0)
-    check_in = models.TimeField(default=datetime.time(00, 00))
-    check_out = models.TimeField(default=datetime.time(00, 00))
+    check_in = models.TimeField()
+    check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
         "users.User", related_name="rooms", on_delete=models.CASCADE, null=True
@@ -103,8 +103,11 @@ class Room(core_models.AbstractTimeStamped):
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_rating = 0
-        for review in all_reviews:
-            all_rating += review.rating_avg()
-        return all_rating / len(all_reviews)
+        if len(all_reviews) != 0:
+            for review in all_reviews:
+                all_rating += review.rating_avg()
+            return all_rating / len(all_reviews)
+        else:
+            return 0
 
     total_rating.short_description = "RATING"

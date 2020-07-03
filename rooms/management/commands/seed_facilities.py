@@ -4,7 +4,7 @@ from rooms.models import Facility
 
 class Command(BaseCommand):
 
-    help = "This command creates facilities"
+    help = "This command create facilities data"
 
     def handle(self, *args, **options):
         facilities = [

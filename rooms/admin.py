@@ -36,12 +36,12 @@ class RoomAdmin(admin.ModelAdmin):
             "Basic Info",
             {"fields": ("name", "description", "country", "address", "price")},
         ),
-        ("Times", {"fields": ("check_in", "check_out", "instant_book")},),
+        ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
         (
             "More About the Space",
             {"classes": ("collapse",), "fields": ("amenities", "facility", "rule")},
         ),
-        ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths"),},),
+        ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths")},),
         ("Last Details", {"fields": ("host",)}),
     )
 

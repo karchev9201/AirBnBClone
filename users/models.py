@@ -25,7 +25,7 @@ class User(AbstractUser):
 
     CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_YEN, "YEN"))
 
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(upload_to="avatars", blank=True)
     gender = models.CharField(max_length=10, blank=True, choices=GENDER_CHOICES)
     bio = models.TextField(default="", blank=True)
     birthdate = models.DateField(null=True, blank=True)
@@ -36,3 +36,6 @@ class User(AbstractUser):
         choices=CURRENCY_CHOICES, max_length=3, default="usd", blank=True
     )
     superhost = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username

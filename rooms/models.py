@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django_countries.fields import CountryField
 from core import models as core_models
@@ -106,7 +105,7 @@ class Room(core_models.AbstractTimeStamped):
         if len(all_reviews) != 0:
             for review in all_reviews:
                 all_rating += review.rating_avg()
-            return all_rating / len(all_reviews)
+            return round(all_rating / len(all_reviews), 2)
         else:
             return 0
 

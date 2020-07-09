@@ -1,29 +1,42 @@
-from django.views import View
-from django.shortcuts import render, redirect, reverse
-from django.contrib.auth import authenticate, login, logout
+from django.views.generic import FormView
+from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LogoutView
 from . import forms
 
 
-class LoginView(View):
-    def get(self, request):
-        form = forms.LoginForm(initial={"email": "karchev9201@gmail.com"})
-        return render(request, "users/login.html", {"form": form})
+class LoginView(FormView):
 
-    def post(self, request):
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get("email")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=email, password=password)
+    template_name = "users/login.html"
+    form_class = forms.LoginForm
+    success_url = reverse_lazy("core:home")
+    initial = {"email": "karchev9201@gmail.com"}
 
-            if user is not None:
-                print(email, password)
-                login(request, user)
-                return redirect(reverse("core:home"))
+    def form_valid(self, form):
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+        return super().form_valid(form)
 
-        return render(request, "users/login.html", {"form": form})
+    # def get(self, request):
+    #     form = forms.LoginForm(initial={"email": "karchev9201@gmail.com"})
+    #     return render(request, "users/login.html", {"form": form})
+
+    # def post(self, request):
+    #     form = forms.LoginForm(request.POST)
+    #     if form.is_valid():
+    #         email = form.cleaned_data.get("email")
+    #         password = form.cleaned_data.get("password")
+    #         user = authenticate(request, username=email, password=password)
+
+    #         if user is not None:
+    #             login(request, user)
+    #             return redirect(reverse("core:home"))
+
+    #     return render(request, "users/login.html", {"form": form})
 
 
-def Logout(request):
-    logout(request)
-    return redirect(reverse("core:home"))
+class Logout(LogoutView):
+    pass

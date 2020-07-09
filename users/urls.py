@@ -5,5 +5,5 @@ app_name = "users"
 
 urlpatterns = [
     path("login", views.LoginView.as_view(), name="login"),
-    path("logout", views.Logout, name="logout"),
+    path("logout", views.Logout.as_view(), name="logout"),
 ]

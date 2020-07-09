@@ -89,9 +89,9 @@ class Room(core_models.AbstractTimeStamped):
     room_type = models.ForeignKey(
         "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
     )
-    amenities = models.ManyToManyField("Amenity", related_name="rooms")
-    facility = models.ManyToManyField("Facility", related_name="rooms")
-    rule = models.ManyToManyField("Rule", related_name="rooms")
+    amenities = models.ManyToManyField("Amenity", related_name="rooms", blank=True)
+    facility = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    rule = models.ManyToManyField("Rule", related_name="rooms", blank=True)
 
     def save(self, *args, **kwargs):
         self.city = str.capitalize(self.city)

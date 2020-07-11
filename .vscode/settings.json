@@ -7,5 +7,6 @@
     "python.linting.flake8Args": [
         "--max-line-length=150",
         "--ignore=E203"
-    ]
+    ],
+    "python.pythonPath": "C:\\Users\\localAccount\\.virtualenvs\\AirBnBClone-4jjWYLbf\\Scripts\\python.exe"
 }

@@ -10,6 +10,7 @@ Sign Up
 {% endblock page_title %}
 
 {% block content %}
+    {% include 'partials/social_login.html' %}
     <form method="POST" action="{% url 'users:sign' %}">
         {% csrf_token %}
         {{form.as_p}}

@@ -29,6 +29,7 @@ class SignForm(forms.ModelForm):
             "email",
             "birthdate",
         )
+        widgets = {"birthdate": forms.SelectDateWidget()}
 
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)

@@ -57,6 +57,9 @@ class User(AbstractUser):
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
 
+    age = "age"
+    dict_test = {age: 44}
+
     def __str__(self):
         return self.username
 

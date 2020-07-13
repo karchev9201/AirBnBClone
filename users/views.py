@@ -65,7 +65,7 @@ def github_login(request):
     redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
 
     return redirect(
-        f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=reqd:user"
+        f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user%20user:email"
     )
     pass
 
@@ -93,17 +93,49 @@ def github_callback(request):
                         "Accept": "application/json",
                     },
                 )
+                emails_request = requests.get(
+                    "https://api.github.com/user/emails",
+                    headers={
+                        "Authorization": f"token {access_token}",
+                        "Accept": "application/json",
+                    },
+                )
                 profile_json = profile_request.json()
+                emails_json = emails_request.json()
                 username = profile_json.get("login", None)
-                if username is not None:
-                    name = profile_json.get("name")
-                    email = profile_json.get("email")
-                    bio = profile_json.get("bio")
-                    user = models.User.objects.get(email=email)
+                email = None
+                for index in range(len(emails_json)):
+                    if emails_json[index].get("primary"):
+                        email = emails_json[index].get("email")
+                if username is not None and email is not None:
+                    name = (
+                        profile_json.get("name")
+                        if profile_json.get("name") is not None
+                        else "no name"
+                    )
+                    bio = (
+                        profile_json.get("bio")
+                        if profile_json.get("bio") is not None
+                        else "no bio"
+                    )
+                    try:
+                        user = models.User.objects.get(email=email)
+                        if user.login_method != models.User.LOGIN_GITHUB:
+                            raise GithubException()
+                    except models.User.DoesNotExist:
+                        user = models.User.objects.create(
+                            username=email,
+                            email=email,
+                            first_name=name,
+                            bio=bio,
+                            login_method=models.User.LOGIN_GITHUB,
+                        )
+                        user.set_unusable_password()
+                        user.save()
+                    login(request, user)
+                    return redirect(reverse("core:home"))
                 else:
                     raise GithubException()
-        else:
-            raise GithubException()
     except GithubException:
         return redirect(reverse("users:login"))
 
